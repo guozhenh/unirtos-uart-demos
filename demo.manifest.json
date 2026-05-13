@@ -1,0 +1,15 @@
+{
+  "name": "uart_demos",
+  "type": "demo",
+  "platforms": [
+    "all"
+  ],
+  "depend_config": "depend.config",
+  "entries": [
+    {
+      "order": 130,
+      "entry_name": "uart_demo",
+      "function": "unir_uart_demo_init"
+    }
+  ]
+}

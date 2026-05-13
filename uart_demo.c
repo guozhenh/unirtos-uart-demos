@@ -19,6 +19,8 @@
 #include "qosa_log.h"
 #include "qosa_gpio.h"
 #include "uart_demo.h"
+#include "qosa_pinctrl.h"
+#include "unirtos_app_init_registry.h"
 
 /*===========================================================================
  *  Macro Definition
@@ -94,10 +96,36 @@ static void unir_uart_demo_process(void *ctx)
     dcb_config.parity_bit = QOSA_UART_PARITY_NONE;
     dcb_config.stop_bit = QOSA_UART_STOP_1;
 
-    qosa_uart_ioctl(UNIR_TEST_UART_PORT, QOSA_UART_IOCTL_SET_DCB_CFG, (void *)&dcb_config);
+    qosa_uart_error_e ctl_ret = qosa_uart_ioctl(UNIR_TEST_UART_PORT, QOSA_UART_IOCTL_SET_DCB_CFG, (void *)&dcb_config);
+    if(ctl_ret != QOSA_UART_SUCCESS)
+    {
+        QLOGI("qosa_uart_ioctl ret = %d", ctl_ret);
+        return;
+    }
     /* Configure UART port pin functions */
-    qosa_pin_set_func(UNIR_TEST_UART_TX_PIN,UNIR_TEST_UART_PIN_FUNC);
-    qosa_pin_set_func(UNIR_TEST_UART_RX_PIN,UNIR_TEST_UART_PIN_FUNC);
+
+    if(dcb_config.flow_ctrl == QOSA_FC_HW)
+    {
+        pinctrl_option_t cts_option = {.func = UNIR_TEST_FLOW_CTRL_PIN_FUNC, .pull = QOSA_PIN_PULL_NONE, .driver = QOSA_PIN_DRIVE_LEVEL_0};
+        pinctrl_option_t rts_option = {.func = UNIR_TEST_FLOW_CTRL_PIN_FUNC, .pull = QOSA_PIN_PULL_NONE, .driver = QOSA_PIN_DRIVE_LEVEL_0};
+        qosa_pinctrl_set_option(UNIR_TEST_UART_CTS_PIN, cts_option);
+        qosa_pinctrl_set_option(UNIR_TEST_UART_RTS_PIN, rts_option);
+    }
+    else if(dcb_config.flow_ctrl == QOSA_FC_HW_RTS)
+    {
+        pinctrl_option_t rts_option = {.func = UNIR_TEST_FLOW_CTRL_PIN_FUNC, .pull = QOSA_PIN_PULL_NONE, .driver = QOSA_PIN_DRIVE_LEVEL_0};
+        qosa_pinctrl_set_option(UNIR_TEST_UART_RTS_PIN, rts_option);
+    }
+    else if(dcb_config.flow_ctrl == QOSA_FC_HW_CTS)
+    {
+        pinctrl_option_t cts_option = {.func = UNIR_TEST_FLOW_CTRL_PIN_FUNC, .pull = QOSA_PIN_PULL_NONE, .driver = QOSA_PIN_DRIVE_LEVEL_0};
+        qosa_pinctrl_set_option(UNIR_TEST_UART_CTS_PIN, cts_option);
+    }
+
+    pinctrl_option_t tx_option = {.func = UNIR_TEST_UART_PIN_FUNC, .pull = QOSA_PIN_PULL_UP, .driver = QOSA_PIN_DRIVE_LEVEL_0};
+    pinctrl_option_t rx_option = {.func = UNIR_TEST_UART_PIN_FUNC, .pull = QOSA_PIN_PULL_UP, .driver = QOSA_PIN_DRIVE_LEVEL_0};
+    qosa_pinctrl_set_option(UNIR_TEST_UART_TX_PIN, tx_option);
+    qosa_pinctrl_set_option(UNIR_TEST_UART_RX_PIN, rx_option);
     /* Open UART port */
     qosa_uart_open(UNIR_TEST_UART_PORT);
 
@@ -192,3 +220,5 @@ void unir_uart_demo_init(void)
         );
     }
 }
+
+UNIRTOS_APP_EXPORT(130, "uart_demo", unir_uart_demo_init);

@@ -28,7 +28,10 @@
 #define UNIR_TEST_UART_PORT                      QOSA_UART_PORT_1
 #define UNIR_TEST_UART_TX_PIN                    UNIR_UART1_TX_PIN
 #define UNIR_TEST_UART_RX_PIN                    UNIR_UART1_RX_PIN
+#define UNIR_TEST_UART_CTS_PIN                   UNIR_UART1_CTS_PIN
+#define UNIR_TEST_UART_RTS_PIN                   UNIR_UART1_RTS_PIN
 #define UNIR_TEST_UART_PIN_FUNC                  UNIR_UART1_PIN_FUNC
+#define UNIR_TEST_FLOW_CTRL_PIN_FUNC             UNIR_UART1_FLOW_CTRL_FUNC    
 /* Pin definitions need to be configured according to the PINMUX table of the actual platform, as there are differences in definitions among different platforms
   The pin definitions need to be configured according to the PINMUX table of the actual platform.
   There are differences in the definitions for each platform.*/
@@ -47,6 +50,16 @@
 #define UNIR_UART3_TX_PIN                        (62)
 #define UNIR_UART3_RX_PIN                        (63)
 #define UNIR_UART3_PIN_FUNC                      (3)
+
+#define UNIR_UART0_CTS_PIN                       (43)
+#define UNIR_UART0_RTS_PIN                       (42)
+#define UNIR_UART0_FLOW_CTRL_FUNC                (3)
+
+#define UNIR_UART1_CTS_PIN                       (16)
+#define UNIR_UART1_RTS_PIN                       (17)
+#define UNIR_UART1_FLOW_CTRL_FUNC                (3)
+
+/* UART2 and UART3 flow control pins need to be selected by customer */
 
 /*===========================================================================
   *  Enum

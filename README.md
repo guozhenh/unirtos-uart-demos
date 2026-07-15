@@ -40,19 +40,19 @@ unirtos-cli ls-demos
 创建本 demo 工程：
 
 ```bash
-unirtos-cli new -r unirtos_uart_demos
+unirtos-cli new -r unirtos-uart-demos
 ```
 
 如需指定版本：
 
 ```bash
-unirtos-cli new -r unirtos_uart_demos -v 1.0.0
+unirtos-cli new -r unirtos-uart-demos -v 1.0.0
 ```
 
 ### 3. 进入工程并编译
 
 ```bash
-cd unirtos_uart_demos-1.0.0
+cd unirtos-uart-demos-1.0.0
 unirtos-cli env-setup
 unirtos-cli build
 ```
